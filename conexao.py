@@ -23,3 +23,14 @@ class Conexao:
             print("Conexão ao banco de dados PostgreSQL realizada com sucesso")
         except OperationalError as e:
             print(f"Ocorreu um erro ao conectar ao banco de dados: {e}")
+
+    def adicionar_contato(conn, nome, email, telefone):
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"""
+                    INSERT INTO Contato (nome, email, telefone) VALUES {nome}, {email}, {telefone}
+                """)
+                conn.commit()
+                print("Dados inseridos com sucesso.")
+        except Exception as e:
+            print(f"Erro ao inserir dados: {e}")
