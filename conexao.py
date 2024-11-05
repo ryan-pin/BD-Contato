@@ -42,7 +42,50 @@ class Conexao:
             """
             cursor.execute(query, (contato.nome, contato.email, contato.telefone))
             conn.commit()
-            print("Dados inseridos com sucesso.")
+            print("Contato criado com sucesso.")
         except OperationalError as e:
             print(f"Ocorreu um erro ao criar um novo contato: {e}")
+            return
+
+    def ler_contato(self, contato):
+        if self.conexao is None:
+            print("Não há conexão com o banco de dados.")
+            return    
+        
+        try:
+            cursor = self.conexao.cursor()
+            query = f"""
+                SELECT * FROM Contato WHERE id = {contato.id}
+            """
+            cursor.execute(query, (contato.id))
+            resultSet = cursor.fetchall()
+            contatos = []
+            for row in resultSet:
+                contatos.append(Contato(row[0],row[1],row[2],row[3]))
+            cursor.close()
+            return contatos
+        
+        except OperationalError as e:
+            print(f"Ocorreu um erro ao consultar um contato: {e}")
+            return
+        
+    def atualizar_contato(self, contato):
+        if self.conexao is None:
+            print("Não há conexão com o banco de dados.")
+            return    
+        
+    def deletar_contato(self, contato):
+        if self.conexao is None:
+            print("Não há conexão com o banco de dados.")
+            return   
+        try:
+            cursor = self.conexao.cursor()
+            query = f"""
+                DELETE FROM contatos WHERE id = {contato.id}
+            """
+            cursor.execute(query, (contato.id))
+            self.conexao.commit()
+            print("Contato deletado com sucesso.")
+        except OperationalError as e:
+            print(f"Ocorreu um erro ao consultar um contato: {e}")
             return
