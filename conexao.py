@@ -1,7 +1,8 @@
 import psycopg2
 from psycopg2 import sql
+from psycopg2 import OperationalError
 
-from modelos import contato
+from modelos.Contato import Contato
 
 class Conexao:
     
@@ -26,13 +27,22 @@ class Conexao:
         except OperationalError as e:
             print(f"Ocorreu um erro ao conectar ao banco de dados: {e}")
 
-    def adicionar_contato(conn, contato):
+    # Funções de CRUD
+
+    def adicionar_contato(self, conn, contato):
+        if self.conexao is None:
+            print("Não há conexão com o banco de dados.")
+            return    
+        
         try:
-            with conn.cursor() as cursor:
-                cursor.execute(f"""
-                    INSERT INTO Contato (nome, email, telefone) VALUES {contato.nome}, {contato.email}, {contato.telefone}
-                """)
-                conn.commit()
-                print("Dados inseridos com sucesso.")
-        except Exception as e:
-            print(f"Erro ao inserir dados: {e}")
+            cursor = self.conexao.cursor()
+            query = f"""
+                INSERT INTO Contato (nome, email, telefone) 
+                VALUES ({contato.nome}, {contato.email}, {contato.telefone})
+            """
+            cursor.execute(query, (contato.nome, contato.email, contato.telefone))
+            conn.commit()
+            print("Dados inseridos com sucesso.")
+        except OperationalError as e:
+            print(f"Ocorreu um erro ao criar um novo contato: {e}")
+            return

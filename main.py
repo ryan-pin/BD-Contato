@@ -1,5 +1,5 @@
 from conexao import Conexao
-from modelos import contato 
+from modelos.Contato import Contato 
 
 conn = Conexao(
     "Cont", 
@@ -21,11 +21,15 @@ while(True):
     opcao = int(input("Digite a opção: "))
 
     if opcao == 1:
+
         nome = input("Digite o nome do contato: ")
         email = input("Digite o email do contato: ")
         telefone = input("Digite o telefone do contato: ")
+        
+        contato = Contato(nome, email, telefone)
+
         if conn:
-            contato = conn.adicionar_contato(nome, email, telefone)
+            contato = conn.adicionar_contato(conn, contato)
 
     if opcao == 0:
         exit()
