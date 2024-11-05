@@ -27,3 +27,6 @@ while(True):
         if conn:
             contato = conn.adicionar_contato(nome, email, telefone)
 
+    if opcao == 0:
+        exit()
+
